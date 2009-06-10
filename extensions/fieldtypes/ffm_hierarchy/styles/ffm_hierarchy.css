@@ -1,0 +1,10 @@
+td.ffm_hierarchy { border-bottom-color:#e5e8ea; width:39px; vertical-align:middle !important; background:#fff url(../images/cellbg.gif) 29px 0 !important; }
+td.tableCellOne.ffm_hierarchy { background-color:#f7fafc !important; }
+.ff_matrix table tr:last-child td.ffm_hierarchy { border-bottom-color:#cad0d5; }
+
+.ffm_hierarchy .container { position:relative; margin:-10px;  }
+.ffm_hierarchy .pos { margin:-12px 0 0 29px; min-width:30px; height:12px; border-bottom:2px solid #bfbfbf; background:url(../images/posbg.gif) no-repeat 0 100%; }
+
+.ffm_hierarchy a { display:none; position:absolute; top:50%; margin-top:-9px; width:20px; height:30px; background:no-repeat 50% 50%; cursor:pointer; }
+.ffm_hierarchy a.outdent { left:0; background-image:url(../images/outdent.gif); }
+.ffm_hierarchy a.indent { right:0; background-image:url(../images/indent.gif); }
