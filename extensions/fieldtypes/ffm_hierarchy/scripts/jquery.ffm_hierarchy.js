@@ -1,30 +1,43 @@
 (function($){
 
 
-$.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function($cell) {
-	var $pos = $('div.pos', $cell);
-	var $buttons = $('a', $cell);
-	var $indent = $('a.indent', $cell);
-	var $outdent = $('a.outdent', $cell);
+$.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function($cell, obj) {
+	var $indentBtn = $('a.indent', $cell);
+	var $outdentBtn = $('a.outdent', $cell);
+	var $row = $cell.parent();
+	var $indentedCell = $row.find('.td:not(.ffm_hierarchy):first');
+	var indent = 0;
+	var indentSize = 30;
 
+	var updateIndent = function(diff) {
+		if (indent + diff < 0) return;
 
-	$cell.hover(
+		if (indent == 0) {
+			$indentedCell.css({
+				backgroundImage: 'url('+PATH_CP_IMG+'cat_marker.gif)',
+				backgroundRepeat: 'no-repeat'
+			});
+		}
+		indent += diff;
+		if (indent == 0) {
+			$indentedCell.css('backgroundImage', 'none');
+		}
+		else {
+			$indentedCell.css({
+				backgroundPosition: (15 + (indent-1) * indentSize)+'px 11px',
+				paddingLeft: 10 + indent * indentSize
+			});
+		}
+	}
+
+	$indentBtn.click(
 		function() {
-			$buttons.fadeIn(100);
-		},
-		function() {
-			$buttons.fadeOut(100);
+			updateIndent(1);
 		}
 	);
-
-	$indent.click(
+	$outdentBtn.click(
 		function() {
-			$pos.css('marginLeft', parseInt($pos.css('margin-left'))+30);
-		}
-	);
-	$outdent.click(
-		function() {
-			$pos.css('marginLeft', parseInt($pos.css('margin-left'))-30);
+			updateIndent(-1);
 		}
 	);
 }

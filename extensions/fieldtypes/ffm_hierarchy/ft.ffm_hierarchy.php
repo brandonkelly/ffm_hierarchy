@@ -32,6 +32,9 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	{
 		$this->include_css('styles/ffm_hierarchy.css');
 		$this->include_js('scripts/jquery.ffm_hierarchy.js');
+		$this->insert_js('PATH_CP_IMG="'.PATH_CP_IMG.'";');
+
+		return '<a class="outdent"></a><a class="indent"></a>';
 
 		return '<div class="container">'
 		     .   '<div class="pos"></div>'

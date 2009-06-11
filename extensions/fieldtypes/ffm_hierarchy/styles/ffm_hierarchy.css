@@ -1,4 +1,4 @@
-td.ffm_hierarchy { border-bottom-color:#e5e8ea; width:39px; vertical-align:middle !important; background:#fff url(../images/cellbg.gif) 29px 0 !important; }
+/*td.ffm_hierarchy { border-bottom-color:#e5e8ea; width:39px; vertical-align:middle !important; background:#fff url(../images/cellbg.gif) 29px 0 !important; }
 td.tableCellOne.ffm_hierarchy { background-color:#f7fafc !important; }
 .ff_matrix table tr:last-child td.ffm_hierarchy { border-bottom-color:#cad0d5; }
 
@@ -7,4 +7,9 @@ td.tableCellOne.ffm_hierarchy { background-color:#f7fafc !important; }
 
 .ffm_hierarchy a { display:none; position:absolute; top:50%; margin-top:-9px; width:20px; height:30px; background:no-repeat 50% 50%; cursor:pointer; }
 .ffm_hierarchy a.outdent { left:0; background-image:url(../images/outdent.gif); }
-.ffm_hierarchy a.indent { right:0; background-image:url(../images/indent.gif); }
+.ffm_hierarchy a.indent { right:0; background-image:url(../images/indent.gif); }*/
+
+.ff_matrix table .ffm_hierarchy { width:40px; vertical-align:middle; padding:5px; }
+.ff_matrix table .ffm_hierarchy a { display:block; float:left; width:20px; height:20px; background:no-repeat 50% 50%; cursor:pointer; }
+.ff_matrix table .ffm_hierarchy a.outdent { background-image:url(../images/outdent.gif); }
+.ff_matrix table .ffm_hierarchy a.indent { background-image:url(../images/indent.gif); }
