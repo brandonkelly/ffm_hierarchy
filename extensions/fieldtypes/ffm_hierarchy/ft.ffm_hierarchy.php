@@ -35,12 +35,6 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		$this->insert_js('PATH_CP_IMG="'.PATH_CP_IMG.'";');
 
 		return '<a class="outdent"></a><a class="indent"></a>';
-
-		return '<div class="container">'
-		     .   '<div class="pos"></div>'
-		     .   '<a class="outdent"></a>'
-		     .   '<a class="indent"></a>'
-		     . '</div>';
 	}
 
 }
