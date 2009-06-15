@@ -49,14 +49,7 @@ $.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function(cell, FFM) {
 
 // handle row sorting
 $.fn.ffMatrix.onSortRow.ffm_hierarchy = function(cell, FFM) {
-	// find the obj
-	var obj;
-	$.each(FFM.hierarchy, function(){
-		if (this.cell == cell) {
-			obj = this;
-			return false;
-		}
-	});
+	var obj = findObj(cell, FFM);
 
 	// update the index
 	var oldIndex = obj.index;
@@ -81,6 +74,23 @@ $.fn.ffMatrix.onSortRow.ffm_hierarchy = function(cell, FFM) {
 	});
 };
 
+
+// handle row deletes
+$.fn.ffMatrix.onDeleteRow.ffm_hierarchy = function(cell, FFM) {
+	var obj = findObj(cell, FFM);
+};
+
+
+function findObj(cell, FFM) {
+	var obj;
+	$.each(FFM.hierarchy, function(){
+		if (this.cell == cell) {
+			obj = this;
+			return false;
+		}
+	});
+	return obj;
+}
 
 function updateIndex(obj) {
 	obj.index = obj.$row.attr('rowIndex') - 1;
