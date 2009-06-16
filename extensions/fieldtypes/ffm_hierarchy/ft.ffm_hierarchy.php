@@ -50,11 +50,9 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	 * Check to see if this matrix includes an FFM Hierarchy cell,
 	 * and if so, return the restructured field data
 	 *
-	 * @param  array   $params          Name/value pairs from the opening tag
-	 * @param  string  $tagdata         Chunk of tagdata between field tag pairs
-	 * @param  string  $field_data      Currently saved field value
-	 * @param  array   $field_settings  The field's settings
-	 * @return string  Modified $tagdata
+	 * @param  string  $field_data      Currently saved FF Matrix field value
+	 * @param  array   $field_settings  The FF Matrix field's settings
+	 * @return string  Modified $field_data
 	 */
 	function ff_matrix_tag_field_data($field_data, $field_settings)
 	{
