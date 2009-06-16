@@ -56,7 +56,7 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	 * @param  array   $field_settings  The field's settings
 	 * @return string  Modified $tagdata
 	 */
-	function ff_matrix_tag_field_data($params, $tagdata, $field_data, $field_settings)
+	function ff_matrix_tag_field_data($field_data, $field_settings)
 	{
 		global $FF;
 		foreach($field_settings['cols'] as $col_id=>$col)
@@ -94,6 +94,22 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 			}
 		}
 		return $children;
+	}
+
+	/**
+	 * Display Tag
+	 *
+	 * @param  array   $params          Name/value pairs from the opening tag
+	 * @param  string  $tagdata         Chunk of tagdata between field tag pairs
+	 * @param  string  $field_data      Currently saved field value
+	 * @param  array   $field_settings  The field's settings
+	 * @return string  Modified $tagdata
+	 */
+	function display_tag($params, $tagdata, $field_data, $field_settings)
+	{
+		global $FFM;
+
+		return $field_data;
 	}
 
 }
