@@ -3,11 +3,18 @@
 
 // initialize new cells
 $.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function(cell, FFM) {
+	if (!FFM.hierarchy) {
+		FFM.hierarchy = new Array();
+	}
+
 	var obj = {
 		cell:     cell,
 		$cell:    $(cell),
 		FFM:      FFM
 	};
+
+	// input
+	obj.$input = $('input', obj.$cell);
 
 	// buttons
 	obj.$buttons = $('a', obj.$cell);
@@ -26,12 +33,9 @@ $.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function(cell, FFM) {
 
 	obj.$row = obj.$cell.parent();
 	obj.$indentedCell = $('.td:not(.ffm_hierarchy):first', obj.$row);
-	updateIndex(obj);
+	setIndex(obj);
 
 	// register the obj
-	if (!obj.FFM.hierarchy) {
-		obj.FFM.hierarchy = new Array();
-	}
 	obj.FFM.hierarchy[obj.index] = obj;
 
 	if (obj.index == 0) {
@@ -39,7 +43,9 @@ $.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function(cell, FFM) {
 		obj.$buttons.addClass('disabled');
 	}
 	else {
-		updateIndent(obj, obj.FFM.hierarchy[obj.index-1].indent);
+		var indent = parseInt(obj.$input.val());
+		if (indent == -1) indent = obj.FFM.hierarchy[obj.index-1].indent;
+		setIndent(obj, indent);
 		if (obj.indent == 0) {
 			obj.$outdent.addClass('disabled');
 		}
@@ -52,7 +58,7 @@ $.fn.ffMatrix.onSortRow.ffm_hierarchy = function(cell, FFM) {
 	// update the index
 	var obj = findObj(cell, FFM);
 	FFM.hierarchy.splice(obj.index, 1);
-	updateIndex(obj);
+	setIndex(obj);
 	FFM.hierarchy.splice(obj.index, 0, obj);
 
 	// cleanup
@@ -88,31 +94,32 @@ function cleanupHierarchy(FFM) {
 		this.index = index;
 
 		if (this.index == 0) {
-			updateIndent(this, 0);
+			setIndent(this, 0);
 			this.$buttons.addClass('disabled');
 		} else {
 			var maxIndent = FFM.hierarchy[this.index-1].indent + 1;
 			var indent = (this.indent <= maxIndent) ? this.indent : maxIndent;
-			updateIndent(this, indent);
+			setIndent(this, indent);
 		}
 	});
 }
 
-function updateIndex(obj) {
+function setIndex(obj) {
 	obj.index = obj.$row.attr('rowIndex') - 1;
 }
 
 function nudgeIndent(obj, diff) {
 	var children = getChildren(obj);
-	updateIndent(obj, obj.indent+diff);
+	setIndent(obj, obj.indent+diff);
 	$.each(children, function() {
 		nudgeIndent(this, diff);
 	});
 }
 
 var indentSize = 40;
-function updateIndent(obj, indent) {
+function setIndent(obj, indent) {
 	obj.indent = indent;
+	obj.$input.val(obj.indent);
 
 	if (!obj.indent) {
 		obj.$indentedCell.css({

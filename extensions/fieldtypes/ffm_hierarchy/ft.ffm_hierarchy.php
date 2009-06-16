@@ -34,7 +34,10 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		$this->include_js('scripts/jquery.ffm_hierarchy.js');
 		$this->insert_js('PATH_CP_IMG="'.PATH_CP_IMG.'";');
 
-		return '<a class="outdent"></a><a class="indent"></a>';
+		$indent = $cell_data === '' ? '-1' : $cell_data;
+
+		return '<a class="outdent"></a><a class="indent"></a>'
+		     . '<input type="hidden" name="'.$cell_name.'" value="'.$indent.'"/>';
 	}
 
 }
