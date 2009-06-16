@@ -49,35 +49,26 @@ $.fn.ffMatrix.onDisplayCell.ffm_hierarchy = function(cell, FFM) {
 
 // handle row sorting
 $.fn.ffMatrix.onSortRow.ffm_hierarchy = function(cell, FFM) {
-	var obj = findObj(cell, FFM);
-
 	// update the index
-	var oldIndex = obj.index;
+	var obj = findObj(cell, FFM);
+	FFM.hierarchy.splice(obj.index, 1);
 	updateIndex(obj);
-
-	// update the hierarchy array
-	FFM.hierarchy.splice(oldIndex, 1);
 	FFM.hierarchy.splice(obj.index, 0, obj);
 
-	// update each row
-	$.each(FFM.hierarchy, function(index){
-		this.index = index;
-
-		if (this.index == 0) {
-			updateIndent(this, 0);
-			this.$buttons.addClass('disabled');
-		} else {
-			var maxIndent = FFM.hierarchy[this.index-1].indent + 1;
-			var indent = (this.indent <= maxIndent) ? this.indent : maxIndent;
-			updateIndent(this, indent);
-		}
-	});
+	// cleanup
+	cleanupHierarchy(FFM);
 };
 
 
 // handle row deletes
 $.fn.ffMatrix.onDeleteRow.ffm_hierarchy = function(cell, FFM) {
+	//remove obj
 	var obj = findObj(cell, FFM);
+	FFM.hierarchy.splice(obj.index, 1);
+	delete obj;
+
+	// cleanup
+	cleanupHierarchy(FFM);
 };
 
 
@@ -90,6 +81,21 @@ function findObj(cell, FFM) {
 		}
 	});
 	return obj;
+}
+
+function cleanupHierarchy(FFM) {
+	$.each(FFM.hierarchy, function(index){
+		this.index = index;
+
+		if (this.index == 0) {
+			updateIndent(this, 0);
+			this.$buttons.addClass('disabled');
+		} else {
+			var maxIndent = FFM.hierarchy[this.index-1].indent + 1;
+			var indent = (this.indent <= maxIndent) ? this.indent : maxIndent;
+			updateIndent(this, indent);
+		}
+	});
 }
 
 function updateIndex(obj) {
