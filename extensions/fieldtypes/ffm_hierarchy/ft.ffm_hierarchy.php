@@ -15,9 +15,13 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 
 	var $info = array(
 		'name'     => 'FFM Hierarchy',
-		'version'  => '1.0.0',
+		'version'  => '0.0.2',
 		'desc'     => 'Adds hierarchical nesting to your FF Matrix fields',
 		'docs_url' => 'http://brandon-kelly.com/apps/ffm-pack/docs/hierarchy'
+	);
+
+	var $hooks = array(
+		'ff_matrix_tag_field_data'
 	);
 
 	/**
@@ -38,6 +42,46 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 
 		return '<a class="outdent"></a><a class="indent"></a>'
 		     . '<input type="hidden" name="'.$cell_name.'" value="'.$indent.'"/>';
+	}
+
+	/**
+	 * FF Matrix Tag Field Data Hook
+	 *
+	 * @param  array   $params          Name/value pairs from the opening tag
+	 * @param  string  $tagdata         Chunk of tagdata between field tag pairs
+	 * @param  string  $field_data      Currently saved field value
+	 * @param  array   $field_settings  The field's settings
+	 * @return string  Modified $tagdata
+	 */
+	function ff_matrix_tag_field_data($params, $tagdata, $field_data, $field_settings)
+	{
+		global $FF;
+		foreach($field_settings['cols'] as $col_id=>$col)
+		{
+			if ($col['type'] == 'ffm_hierarchy')
+			{
+				$FF->log($this->get_children($field_data, $col_id));
+			}
+		}
+	}
+
+	function get_children(&$field_data, $indent_cell, $index=0, $indent=-1)
+	{
+		$children = array();
+		for ($index; isset($field_data[$index]); $index++)
+		{
+			if ($field_data[$index][$indent_cell] == $indent+1)
+			{
+				$child = $field_data[$index];
+				$child['children'] = $this->get_children($field_data, $indent_cell, $index, $indent+1);
+				$children[] = $child;
+			}
+			else if ($field_data[$indent_cell] <= $indent)
+			{
+				break;
+			}
+		}
+		return $children;
 	}
 
 }
