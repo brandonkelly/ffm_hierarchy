@@ -45,7 +45,10 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	}
 
 	/**
-	 * FF Matrix Tag Field Data Hook
+	 * FF Matrix Tag Field Data hook
+	 *
+	 * Check to see if this matrix includes an FFM Hierarchy cell,
+	 * and if so, return the restructured field data
 	 *
 	 * @param  array   $params          Name/value pairs from the opening tag
 	 * @param  string  $tagdata         Chunk of tagdata between field tag pairs
@@ -60,23 +63,32 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		{
 			if ($col['type'] == 'ffm_hierarchy')
 			{
-				$FF->log($this->get_children($field_data, $col_id));
+				return $this->_structure_data($field_data, $col_id);
 			}
 		}
 	}
 
-	function get_children(&$field_data, $indent_cell, $index=0, $indent=-1)
+	/**
+	 * Structure Data
+	 *
+	 * Restructures FF Matrix's field data,
+	 * taking the hierarchy into account
+	 *
+	 * @access private
+	 */
+	function _structure_data(&$field_data, $indent_cell, $indent = -1)
 	{
 		$children = array();
-		for ($index; isset($field_data[$index]); $index++)
+		while($field_data)
 		{
-			if ($field_data[$index][$indent_cell] == $indent+1)
+			if ($indent == -1 || $field_data[0][$indent_cell] == $indent+1)
 			{
-				$child = $field_data[$index];
-				$child['children'] = $this->get_children($field_data, $indent_cell, $index, $indent+1);
+				$child = array_shift($field_data);
+				$grandchildren = $this->_structure_data($field_data, $indent_cell, $indent+1);
+				$child[$indent_cell] = $grandchildren ? $grandchildren : NULL;
 				$children[] = $child;
 			}
-			else if ($field_data[$indent_cell] <= $indent)
+			else if ($field_data[0][$indent_cell] <= $indent)
 			{
 				break;
 			}
