@@ -61,7 +61,12 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		{
 			if ($col['type'] == 'ffm_hierarchy')
 			{
-				return $this->_structure_data($field_data, $col_id);
+				if ( ! is_array($field_data[0][$col_id]))
+				{
+					$field_data = $this->_structure_data($field_data, $col_id);
+				}
+				//$FF->log($field_data);
+				return $field_data;
 			}
 		}
 	}
@@ -82,8 +87,7 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 			if ($indent == -1 || $field_data[0][$indent_cell] == $indent+1)
 			{
 				$child = array_shift($field_data);
-				$grandchildren = $this->_structure_data($field_data, $indent_cell, $indent+1);
-				$child[$indent_cell] = $grandchildren ? $grandchildren : NULL;
+				$child[$indent_cell] = $this->_structure_data($field_data, $indent_cell, $indent+1);
 				$children[] = $child;
 			}
 			else if ($field_data[0][$indent_cell] <= $indent)
@@ -91,7 +95,7 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 				break;
 			}
 		}
-		return $children;
+		return $children ? $children : NULL;
 	}
 
 	/**
@@ -105,9 +109,32 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	 */
 	function display_tag($params, $tagdata, $field_data, $field_settings)
 	{
-		global $FFM;
+		global $FF, $FFM;
 
-		return $field_data;
+		//$FF->log($field_data ? $field_data : 'NULL');
+
+		// default to main FFM params & tagdata
+		if ( ! $params) $params = $FFM->params;
+		if ( ! $tagdata) $tagdata = $FFM->tagdata;
+
+		// backup FFM vars
+		$FFM_params = $FFM->params;
+		$FFM_tagdata = $FFM->tagdata;
+		$FFM_field_settings = $FFM->field_settings;
+		$FFM_switches = $FFM->_switches;
+		$FFM_iterator_count = $FFM->_iterator_count;
+
+		// call tag
+		$r = $FFM->display_tag($params, $tagdata, $field_data, $FFM->field_settings);
+
+		// restore FFM vars
+		$FFM->params = $FFM_params;
+		$FFM->tagdata = $FFM_tagdata;
+		$FFM->field_settings = $FFM_field_settings;
+		$FFM->_switches = $FFM_switches;
+		$FFM->_iterator_count = $FFM_iterator_count;
+
+		return $r;
 	}
 
 }
