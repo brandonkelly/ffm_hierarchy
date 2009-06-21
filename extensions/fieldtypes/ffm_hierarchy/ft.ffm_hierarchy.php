@@ -57,6 +57,9 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 	function ff_matrix_tag_field_data($field_data, $field_settings)
 	{
 		global $FF;
+
+		$field_data = $this->get_last_call($field_data);
+
 		foreach($field_settings['cols'] as $col_id=>$col)
 		{
 			if ($col['type'] == 'ffm_hierarchy')
@@ -65,10 +68,11 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 				{
 					$field_data = $this->_structure_data($field_data, $col_id);
 				}
-				//$FF->log($field_data);
-				return $field_data;
+				break;
 			}
 		}
+
+		return $field_data;
 	}
 
 	/**
