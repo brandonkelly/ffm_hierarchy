@@ -15,18 +15,22 @@ class Ffm_shoutout extends Fieldframe_Fieldtype {
 
 	var $info = array(
 		'name'     => 'FFM Shoutout',
-		'version'  => '0.0.3',
+		'version'  => '0.0.4',
 		'desc'     => 'Allows access to FF Matrix rows from within other fields',
 		'docs_url' => 'http://brandon-kelly.com/apps/ffm-pack/docs/shoutout'
 	);
 
 	var $hooks = array(
-		'ff_matrix_tag_field_data'
+		'ff_matrix_tag_field_data',
+		'weblog_entries_row'
 	);
 
 	var $default_cell_settings = array(
 		'row_template' => ''
 	);
+
+	var $search = array();
+	var $replace = array();
 
 	/**
 	 * Display Cell Settings
@@ -73,9 +77,14 @@ class Ffm_shoutout extends Fieldframe_Fieldtype {
 	 */
 	function ff_matrix_tag_field_data($field_data, $field_settings)
 	{
-		global $FF;
+		global $FF, $FFM;
 
 		$field_data = $this->get_last_call($field_data);
+
+		// backup FFM vars
+		$FFM_params = $FFM->params;
+		$FFM_tagdata = $FFM->tagdata;
+		$FFM_field_settings = $FFM->field_settings;
 
 		foreach($field_settings['cols'] as $col_id => &$col)
 		{
@@ -85,15 +94,8 @@ class Ffm_shoutout extends Fieldframe_Fieldtype {
 				{
 					if ($shoutout = $row[$col_id])
 					{
-						// find and replace instances of
-						// this shoutout in other fields
-						foreach($FF->weblog->query->row as $row_field_id => &$row_field_data)
-						{
-							if (substr($row_field_id, 0, 9) == 'field_id_')
-							{
-								$row_field_data = str_replace('{'.$shoutout.'}', 'REPLACED', $row_field_data, $count);
-							}
-						}
+						$this->search[] = '{'.$shoutout.'}';
+						$this->replace[] = '<<'.$FFM->display_tag($FFM->default_tag_params, $col['settings']['row_template'], array($row), $field_settings, FALSE).'>>';
 					}
 				}
 
@@ -101,7 +103,30 @@ class Ffm_shoutout extends Fieldframe_Fieldtype {
 			}
 		}
 
+		// restore FFM vars
+		$FFM->params = $FFM_params;
+		$FFM->tagdata = $FFM_tagdata;
+		$FFM->field_settings = $FFM_field_settings;
+
 		return $field_data;
+	}
+
+	/**
+	 * Weblog - Entries - Row hook
+	 */
+	function weblog_entries_row($Weblog, $row)
+	{
+		$row = $this->get_last_call($row);
+
+		foreach($row as $field_id => &$field_data)
+		{
+			if (substr($field_id, 0, 9) == 'field_id_')
+			{
+				$field_data = str_replace($this->search, $this->replace, $field_data, $count);
+			}
+		}
+
+		return $row;
 	}
 
 }
