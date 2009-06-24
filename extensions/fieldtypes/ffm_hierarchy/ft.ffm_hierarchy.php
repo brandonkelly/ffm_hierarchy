@@ -64,7 +64,7 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		{
 			if ($col['type'] == 'ffm_hierarchy')
 			{
-				if ( ! is_array($field_data[0][$col_id]))
+				if (isset($field_data[0]) AND ! is_array($field_data[0][$col_id]))
 				{
 					$field_data = $this->_structure_data($field_data, $col_id);
 				}
