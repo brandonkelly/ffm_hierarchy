@@ -6,7 +6,6 @@ if ( ! defined('EXT')) exit('Invalid file request');
 /**
  * FFM Hierarchy Class
  *
- * @package   FF Matrix Expansion Pack
  * @author    Brandon Kelly <me@brandon-kelly.com>
  * @copyright Copyright (c) 2009 Brandon Kelly
  * @license   http://creativecommons.org/licenses/by-sa/3.0/ Attribution-Share Alike 3.0 Unported
@@ -17,7 +16,7 @@ class Ffm_hierarchy extends Fieldframe_Fieldtype {
 		'name'     => 'FFM Hierarchy',
 		'version'  => '0.0.2',
 		'desc'     => 'Adds hierarchical nesting to your FF Matrix fields',
-		'docs_url' => 'http://brandon-kelly.com/apps/ffm-pack/docs/hierarchy'
+		'docs_url' => 'https://github.com/brandonkelly/ffm_hierarchy'
 	);
 
 	var $hooks = array(
